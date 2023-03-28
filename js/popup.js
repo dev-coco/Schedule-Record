@@ -2,10 +2,6 @@ const info = document.getElementsByClassName('info')
 const task = document.getElementById('task')
 const start = document.getElementById('start')
 
-task.addEventListener('keyup', () => {
-  chrome.storage.local.set({ getTask: task.value })
-})
-
 const fillForm = taskEvent => {
   chrome.storage.local.get(['getSheetUrl'], ({ getSheetUrl }) => {
     const body = new FormData()
@@ -18,7 +14,7 @@ const fillForm = taskEvent => {
   })
 }
 
-start.addEventListener('click', () => {
+const startEvent = () => {
   const time = new Date().toLocaleDateString('zh-CN', { hour: '2-digit', minute: '2-digit' }).split(' ')[1]
   if (start.innerText === '开始') {
     info[1].innerHTML = `开始事件：${time}<br>事件：${task.value}`
@@ -35,6 +31,21 @@ start.addEventListener('click', () => {
     chrome.runtime.sendMessage('endRecord');
   }
   [...info].forEach(e => e.classList.toggle('hide'))
+}
+
+task.addEventListener('keyup', () => {
+  chrome.storage.local.set({ getTask: task.value })
+})
+
+task.addEventListener('keyup', function(event) {
+  if (event.keyCode === 13) {
+    event.preventDefault()
+    startEvent()
+  }
+})
+
+start.addEventListener('click', () => {
+  startEvent()
 })
 
 chrome.storage.local.get(['getTask', 'isRunning', 'todo'], ({ getTask, isRunning, todo }) => {

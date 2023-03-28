@@ -1,79 +1,64 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>日程记录</title>
   <meta charset="utf-8">
   <style>
-* {
-  margin: 0px;
-  box-sizing: border-box;
-}
-
-
-body {
-  width: 400px;
-  font-size: 16px;
-}
-
-/* Reset top and bottom margins from certain elements */
-.header,
- p {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-
-.header {
-  background: #28d;
-  padding: 20px;
-  font-size: 1.4em;
-  font-weight: normal;
-  text-align: center;
-  text-transform: uppercase;
-  color: #fff;
-}
-
-.container {
-  background: #ebebeb;
-  padding: 12px;
-}
- p {
-  padding: 12px;
-}
-
-input,
-button {
-  
-  display: block;
-  width: 100%;
-  border-width: 1px;
-  border-style: solid;
-  padding: 16px;
-  outline: 0;
-  font-family: inherit;
-  font-size: 0.95em;
-}
-
-
-
-button {
-  background: #28d;
-  border-color: transparent;
-  color: #fff;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #17c;
-}
-
-.hide {
-  display: none;
-}
-span {
-  float:right
-}
+    * {
+      margin: 0px;
+      box-sizing: border-box;
+    }
+    body {
+      width: 400px;
+      font-size: 16px;
+    }
+    .header,
+    p {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .header {
+      background: #28d;
+      padding: 20px;
+      font-size: 1.4em;
+      font-weight: normal;
+      text-align: center;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .container {
+      background: #ebebeb;
+      padding: 12px;
+    }
+    p {
+      padding: 12px;
+    }
+    input,
+    button {
+      display: block;
+      width: 100%;
+      border-width: 1px;
+      border-style: solid;
+      padding: 16px;
+      outline: 0;
+      font-family: inherit;
+      font-size: 0.95em;
+    }
+    button {
+      background: #28d;
+      border-color: transparent;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #17c;
+    }
+    .hide {
+      display: none;
+    }
+    span {
+      float: right
+    }
   </style>
 </head>
 
@@ -84,8 +69,6 @@ span {
     <p class="info hide"></p>
     <p><button id="start">开始</button></p>
   </div>
-
   <script src="js/popup.js"></script>
 </body>
-
 </html>
