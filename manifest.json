@@ -3,7 +3,7 @@
     "name": "日程记录",
     "description": "记录每项时间的开始和结束时间。",
     "author": "Raz1ner",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "action": {
       "default_popup": "popup.html",
       "default_icon": "src/icon.png"

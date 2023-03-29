@@ -8,7 +8,7 @@
       margin: 0px;
       box-sizing: border-box;
     }
-    body {
+    body, html {
       width: 400px;
       font-size: 16px;
     }
@@ -136,10 +136,23 @@
       height: 40px;
       font-size: 16px;
     }
+    #pomodoro img {
+      right: 10px;
+    }
+    #pomodoro p {
+      position: absolute;
+      right: 0;
+      top: 30px;
+      color: white;
+    }
   </style>
 </head>
 <body>
   <img id="itemSwitch" src="src/setting.png">
+  <div id="pomodoro">
+    <img id="pomodoroAction" src="src/pomodoro.png">
+    <p id="countdown"></p>
+  </div>
   <div class="container hide">
     <h2 class="header">待办事项</h2>
     <div class="box todoList">

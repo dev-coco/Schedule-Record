@@ -14,6 +14,10 @@ const scheduleInfo = document.getElementById('scheduleInfo')
 const scheduleDate = document.getElementById('scheduleDate')
 const popup = document.querySelector('.popup')
 
+// 番茄时间
+const pomodoroAction = document.getElementById('pomodoroAction')
+const countdown = document.getElementById('countdown')
+
 // 今天日期
 const today = () => {
   const currentDate = new Date()
@@ -118,8 +122,25 @@ cleanSchedule.addEventListener('dblclick', () => {
   chrome.storage.local.set({ scheduleItems: '' })
 })
 
+
+pomodoroAction.addEventListener('click', () => {
+  if (countdown.innerText) {
+    chrome.runtime.sendMessage('endPomodoro')
+    countdown.innerText = ''
+  } else {
+    chrome.runtime.sendMessage('startPomodoro')
+    setInterval(getPomodoroTime, 300)
+  }
+})
+
+const getPomodoroTime = async () => {
+  const iconText = await chrome.action.getBadgeText({})
+  if (!iconText.includes(':')) return
+  countdown.innerText = iconText
+}
+
 // 恢复界面数据
-chrome.storage.local.get(['getTask', 'isRunning', 'todo', 'scheduleItems'], ({ getTask, isRunning, todo, scheduleItems }) => {
+chrome.storage.local.get(['getTask', 'isRunning', 'todo', 'scheduleItems', 'pomodoroStatus'], ({ getTask, isRunning, todo, scheduleItems, pomodoroStatus }) => {
   if (getTask) task.value = getTask || ''
   if (todo) info[1].innerHTML = todo || ''
   if (scheduleItems) items.innerHTML = scheduleItems || ''
@@ -130,4 +151,5 @@ chrome.storage.local.get(['getTask', 'isRunning', 'todo', 'scheduleItems'], ({ g
     [...info].forEach(e => e.classList.toggle('hide'))
     start.innerText = '结束'
   }
+  if (pomodoroStatus) setInterval(getPomodoroTime, 300)
 })
