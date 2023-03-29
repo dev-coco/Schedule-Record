@@ -27,7 +27,7 @@ const fillForm = taskEvent => {
     const body = new FormData()
     body.append('task', taskEvent)
     body.append('url', getSheetUrl)
-    fetch('https://script.google.com/macros/s/AKfycbx866jUuV_NNkE0rZmxJoRy3NNFzOr_b0RZtatugHidRKm7xJM8dciGTiVDQoG47_4Wfw/exec', {
+    fetch('https://script.google.com/macros/s/AKfycbwW87TrWzbXxM8qogDqZXQCiTaSyXK4GYyH1XHyQD54zHODoUnnOMqoBkpX5BL1sOWwOA/exec', {
       body,
       method: 'POST'
     })
