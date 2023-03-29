@@ -11,6 +11,7 @@ const items = document.querySelector('.items')
 const addSchedule = document.getElementById('addSchedule')
 const cleanSchedule = document.getElementById('cleanSchedule')
 const scheduleInfo = document.getElementById('scheduleInfo')
+const scheduleDate = document.getElementById('scheduleDate')
 const popup = document.querySelector('.popup')
 
 // 今天日期
@@ -18,7 +19,7 @@ const today = () => {
   const currentDate = new Date()
   const month = currentDate.getMonth() + 1
   const day = currentDate.getDate()
-  return `${month}月${day}日`
+  return `${month}-${day}`
 }
 
 // 填表
@@ -82,10 +83,13 @@ popup.addEventListener('click', e => {
 // 添加事件
 addSchedule.addEventListener('click', () => {
   popup.classList.toggle('hide')
+  const currentDate = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).replaceAll('/', '-')
+  scheduleDate.value = currentDate
   scheduleInfo.focus()
 })
 const addScheduleItem = () => {
-  items.innerHTML += `<label><span class="date">${today()}</span><input type="checkbox"><span>${scheduleInfo.value}</span></label>`
+  const formatDate = scheduleDate.value.replace(/^.{5}/, '')
+  items.innerHTML += `<label><span class="date">${formatDate}</span><input type="checkbox"><span>${scheduleInfo.value}</span></label>`
   scheduleInfo.value = ''
   popup.classList.toggle('hide')
   chrome.storage.local.set({ scheduleItems: items.innerHTML })
@@ -119,7 +123,9 @@ chrome.storage.local.get(['getTask', 'isRunning', 'todo', 'scheduleItems'], ({ g
   if (getTask) task.value = getTask || ''
   if (todo) info[1].innerHTML = todo || ''
   if (scheduleItems) items.innerHTML = scheduleItems || ''
-  document.querySelectorAll('.date').forEach(e => e.outerText !== today() && e.classList.toggle('red'))
+  const currentDate = new Date()
+  const year = currentDate.getFullYear()
+  document.querySelectorAll('.date').forEach(e => new Date(`${year}-${e.outerText} 23:59:59`) < new Date() && e.setAttribute('style', 'font-weight: bold;color: red;'))
   if (isRunning) {
     [...info].forEach(e => e.classList.toggle('hide'))
     start.innerText = '结束'
