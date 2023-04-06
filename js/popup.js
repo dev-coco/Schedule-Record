@@ -28,11 +28,11 @@ const today = () => {
 
 // 填表
 const fillForm = taskEvent => {
-  chrome.storage.local.get(['getSheetUrl'], ({ getSheetUrl }) => {
+  chrome.storage.local.get(['getSheetUrl', 'getScriptUrl'], ({ getSheetUrl, getScriptUrl }) => {
     const body = new FormData()
     body.append('task', taskEvent)
     body.append('url', getSheetUrl)
-    fetch('https://script.google.com/macros/s/AKfycbwW87TrWzbXxM8qogDqZXQCiTaSyXK4GYyH1XHyQD54zHODoUnnOMqoBkpX5BL1sOWwOA/exec', {
+    fetch(getScriptUrl, {
       body,
       method: 'POST'
     })
