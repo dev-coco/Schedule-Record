@@ -2,13 +2,13 @@ let calcTime = false
 let startTime
 
 // 番茄工作法：工作25分钟，休息5分钟
-const workTime = 25 * 60
-const restTime = 5 * 60
+const workTime = 1 * 60
+const restTime = 0.5 * 60
 let count
 let pomodoroStatus
 let timerInterval
 
-const iconText = str => chrome.action.setBadgeText({ text: str || ''})
+const iconText = str => chrome.browserAction.setBadgeText({ text: str || ''})
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message === 'startRecord') {
@@ -74,8 +74,14 @@ function updateTime () {
     // 工作时间结束，设置休息时间
     pomodoroStatus = 'rest'
     count = restTime
+    playAudio()
   } else if (pomodoroStatus === 'rest' && count == 0) {
     stopTimer()
+    playAudio()
   }
   chrome.storage.local.set({ pomodoroStatus })
+}
+
+function playAudio () {
+  new Audio('/src/ice.mp3').play()
 }

@@ -92,11 +92,13 @@ addSchedule.addEventListener('click', () => {
   scheduleInfo.focus()
 })
 const addScheduleItem = () => {
+  const itemStatus = [...document.querySelectorAll('.items input')].map(x => x.checked)
   const formatDate = scheduleDate.value.replace(/^.{5}/, '')
   items.innerHTML += `<label><span class="date">${formatDate}</span><input type="checkbox"><span>${scheduleInfo.value}</span></label>`
   scheduleInfo.value = ''
   popup.classList.toggle('hide')
-  chrome.storage.local.set({ scheduleItems: items.innerHTML })
+  document.querySelectorAll('.items input').forEach((e, index) => e.checked = itemStatus[index] )
+  chrome.storage.local.set({ scheduleItems: items.innerHTML, itemStatus })
 }
 addBtn.addEventListener('click', () => {
   addScheduleItem()
@@ -122,6 +124,11 @@ cleanSchedule.addEventListener('dblclick', () => {
   chrome.storage.local.set({ scheduleItems: '' })
 })
 
+// 勾选待办事项触发
+items.addEventListener('click', () => {
+  const itemStatus = [...document.querySelectorAll('.items input')].map(x => x.checked)
+  chrome.storage.local.set({ scheduleItems: items.innerHTML, itemStatus })
+})
 
 pomodoroAction.addEventListener('click', () => {
   if (countdown.innerText) {
@@ -134,16 +141,19 @@ pomodoroAction.addEventListener('click', () => {
 })
 
 const getPomodoroTime = async () => {
-  const iconText = await chrome.action.getBadgeText({})
+  const iconText = await chrome.browserAction.getBadgeText({})
   if (!iconText.includes(':')) return
   countdown.innerText = iconText
 }
 
 // 恢复界面数据
-chrome.storage.local.get(['getTask', 'isRunning', 'todo', 'scheduleItems', 'pomodoroStatus'], ({ getTask, isRunning, todo, scheduleItems, pomodoroStatus }) => {
+chrome.storage.local.get(['getTask', 'isRunning', 'todo', 'scheduleItems', 'itemStatus', 'pomodoroStatus'], ({ getTask, isRunning, todo, scheduleItems, itemStatus, pomodoroStatus }) => {
   if (getTask) task.value = getTask || ''
   if (todo) info[1].innerHTML = todo || ''
-  if (scheduleItems) items.innerHTML = scheduleItems || ''
+  if (scheduleItems) {
+    items.innerHTML = scheduleItems || ''
+    document.querySelectorAll('.items input').forEach((e, index) => e.checked = itemStatus[index] )
+  }
   const currentDate = new Date()
   const year = currentDate.getFullYear()
   document.querySelectorAll('.date').forEach(e => new Date(`${year}-${e.outerText} 23:59:59`) < new Date() && e.setAttribute('style', 'font-weight: bold;color: red;'))
