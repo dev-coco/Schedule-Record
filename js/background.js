@@ -2,8 +2,8 @@ let calcTime = false
 let startTime
 
 // 番茄工作法：工作25分钟，休息5分钟
-const workTime = 1 * 60
-const restTime = 0.5 * 60
+const workTime = 25 * 60
+const restTime = 5 * 60
 let count
 let pomodoroStatus
 let timerInterval
