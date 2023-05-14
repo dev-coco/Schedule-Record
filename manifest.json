@@ -1,22 +1,20 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "日程记录",
     "description": "记录每项时间的开始和结束时间。",
     "author": "Raz1ner",
     "version": "1.0.4",
-    "browser_action": {
+    "action": {
       "default_popup": "popup.html",
       "default_icon": "src/icon.png"
     },
     "background": {
-      "scripts": ["js/background.js"]
+      "service_worker": "js/background.js"
     },
     "icons": {
       "128": "src/icon.png"
     },
     "options_page": "options.html",
-    "permissions": [
-      "storage",
-      "https://script.google.com/*"
-    ]
+    "host_permissions": ["https://script.google.com/*"],
+    "permissions": ["storage"]
 }

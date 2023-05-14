@@ -34,8 +34,8 @@
       padding: 12px;
     }
     #task,
+    #startTime,
     button {
-      width: 100%;
       border-width: 1px;
       border-style: solid;
       padding: 16px;
@@ -43,7 +43,15 @@
       font-family: inherit;
       font-size: 0.95em;
     }
+    #startTime {
+      width: 106px;
+      margin-right: 10px;
+    }
+    #task {
+      width: 236px;
+    }
     button {
+      width: 100%;
       background: #28d;
       border-color: transparent;
       color: #fff;
@@ -136,23 +144,11 @@
       height: 40px;
       font-size: 16px;
     }
-    #pomodoro img {
-      right: 10px;
-    }
-    #pomodoro p {
-      position: absolute;
-      right: 0;
-      top: 30px;
-      color: white;
-    }
+
   </style>
 </head>
 <body>
   <img id="itemSwitch" src="src/setting.png">
-  <div id="pomodoro">
-    <img id="pomodoroAction" src="src/pomodoro.png">
-    <p id="countdown"></p>
-  </div>
   <div class="container hide">
     <h2 class="header">待办事项</h2>
     <div class="box todoList">
@@ -176,7 +172,7 @@
   <div class="container">
     <h2 class="header">日程记录</h2>
     <div class="box">
-      <p class="info"><input id="task" placeholder="请输入事件"></p>
+      <p class="info"><input id="startTime" type="time"><input id="task" placeholder="请输入事件"></p>
       <p class="info hide"></p>
       <p><button id="start">开始</button></p>
     </div>

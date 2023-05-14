@@ -14,10 +14,6 @@ const scheduleInfo = document.getElementById('scheduleInfo')
 const scheduleDate = document.getElementById('scheduleDate')
 const popup = document.querySelector('.popup')
 
-// 番茄时间
-const pomodoroAction = document.getElementById('pomodoroAction')
-const countdown = document.getElementById('countdown')
-
 // 今天日期
 const today = () => {
   const currentDate = new Date()
@@ -26,10 +22,16 @@ const today = () => {
   return `${month}-${day}`
 }
 
+const currentTime = new Date().toLocaleTimeString().split(':').slice(0, 2).join(':')
+
 // 填表
-const fillForm = taskEvent => {
+const fillForm = (startTime, endTime, taskEvent) => {
+  console.log(startTime, endTime, taskEvent)
   chrome.storage.local.get(['getSheetUrl', 'getScriptUrl'], ({ getSheetUrl, getScriptUrl }) => {
     const body = new FormData()
+    body.append('startTime', startTime)
+    body.append('endTime', endTime)
+    body.append('spendTime', calcMins(startTime, endTime))
     body.append('task', taskEvent)
     body.append('url', getSheetUrl)
     fetch(getScriptUrl, {
@@ -41,18 +43,17 @@ const fillForm = taskEvent => {
 
 // 开始记录事件
 const startEvent = () => {
-  const time = new Date().toLocaleDateString('zh-CN', { hour: '2-digit', minute: '2-digit' }).split(' ')[1]
+  const time = document.getElementById('startTime').value
   if (start.innerText === '开始') {
-    info[1].innerHTML = `开始事件：${time}<br>事件：${task.value}`
+    info[1].innerHTML = `开始时间：${time}<br>结束时间：<input id="endTime" type="time"><br>事件：${task.value}`
+    document.getElementById('endTime').value = currentTime
     start.innerText = '结束'
     chrome.storage.local.set({ isRunning: true, todo: info[1].innerHTML })
     chrome.runtime.sendMessage('startRecord')
   } else if (start.innerText === '结束') {
-    const detail = info[1].innerText.split('事件：')
-    const result = `${detail[1]}～${time} ${detail[2]}`.replace(/\n/g, '')
     task.value = ''
     start.innerText = '开始'
-    fillForm(result)
+    fillForm(time, document.getElementById('endTime').value, info[1].innerText.split('事件：').pop())
     chrome.storage.local.set({ isRunning: false, getTask: '' })
     chrome.runtime.sendMessage('endRecord');
   }
@@ -130,24 +131,8 @@ items.addEventListener('click', () => {
   chrome.storage.local.set({ scheduleItems: items.innerHTML, itemStatus })
 })
 
-pomodoroAction.addEventListener('click', () => {
-  if (countdown.innerText) {
-    chrome.runtime.sendMessage('endPomodoro')
-    countdown.innerText = ''
-  } else {
-    chrome.runtime.sendMessage('startPomodoro')
-    setInterval(getPomodoroTime, 300)
-  }
-})
-
-const getPomodoroTime = async () => {
-  const iconText = await chrome.browserAction.getBadgeText({})
-  if (!iconText.includes(':')) return
-  countdown.innerText = iconText
-}
-
 // 恢复界面数据
-chrome.storage.local.get(['getTask', 'isRunning', 'todo', 'scheduleItems', 'itemStatus', 'pomodoroStatus'], ({ getTask, isRunning, todo, scheduleItems, itemStatus, pomodoroStatus }) => {
+chrome.storage.local.get(['getTask', 'isRunning', 'todo', 'scheduleItems', 'itemStatus'], ({ getTask, isRunning, todo, scheduleItems, itemStatus }) => {
   if (getTask) task.value = getTask || ''
   if (todo) info[1].innerHTML = todo || ''
   if (scheduleItems) {
@@ -161,5 +146,27 @@ chrome.storage.local.get(['getTask', 'isRunning', 'todo', 'scheduleItems', 'item
     [...info].forEach(e => e.classList.toggle('hide'))
     start.innerText = '结束'
   }
-  if (pomodoroStatus) setInterval(getPomodoroTime, 300)
+  document.getElementById('endTime').value = currentTime
 })
+
+// 预设当前时间
+document.getElementById('startTime').value = currentTime
+
+
+function calcMins (startTime, endTime) {
+  startTime = startTime.split(':')
+  endTime = endTime.split(':')
+  const totalStart = ~~startTime[0] * 60 + ~~startTime[1]
+  const totalEnd = ~~endTime[0] * 60 + ~~endTime[1]
+  let result
+  if (endTime[0] < startTime[0]) {
+    result = 1440 + totalEnd - totalStart
+  } else {
+    result = totalEnd - totalStart
+  }
+  return result
+}
+
+
+
+

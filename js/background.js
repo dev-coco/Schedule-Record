@@ -8,7 +8,7 @@ let count
 let pomodoroStatus
 let timerInterval
 
-const iconText = str => chrome.browserAction.setBadgeText({ text: str || ''})
+const iconText = str => chrome.action.setBadgeText({ text: str || ''})
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message === 'startRecord') {
@@ -74,14 +74,8 @@ function updateTime () {
     // 工作时间结束，设置休息时间
     pomodoroStatus = 'rest'
     count = restTime
-    playAudio()
   } else if (pomodoroStatus === 'rest' && count == 0) {
     stopTimer()
-    playAudio()
   }
   chrome.storage.local.set({ pomodoroStatus })
-}
-
-function playAudio () {
-  new Audio('/src/ice.mp3').play()
 }

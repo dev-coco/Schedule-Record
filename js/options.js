@@ -9,7 +9,7 @@ scriptUrl.addEventListener('keyup', () => {
 })
 
 chrome.storage.local.get(['getSheetUrl', 'getScriptUrl'], ({ getSheetUrl, getScriptUrl }) => {
-  const setScript = getScriptUrl || 'https://script.google.com/macros/s/AKfycbwW87TrWzbXxM8qogDqZXQCiTaSyXK4GYyH1XHyQD54zHODoUnnOMqoBkpX5BL1sOWwOA/exec'
+  const setScript = getScriptUrl || 'https://script.google.com/macros/s/AKfycbxcb6sqDMyNSIlt4etsinLm7vMU1EqDED7DK0YixamgPHdMxyIPpTxIDoCV6iDuCnNkrw/exec'
   chrome.storage.local.set({ getScriptUrl: setScript })
   sheetUrl.value = getSheetUrl || ''
   scriptUrl.value = setScript

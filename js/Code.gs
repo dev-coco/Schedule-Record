@@ -1,8 +1,11 @@
 function doPost (request) {
   const params = request.parameter
+  const startTime = params.startTime
+  const endTime = params.endTime
+  const spendTime = params.spendTime
   const task = params.task
   const url = params.url
-  return ContentService.createTextOutput(fillForm(task, url))
+  return ContentService.createTextOutput(fillForm(`${startTime}～${endTime} ${task}`, url))
 }
 
 function fillForm (task, url) {
