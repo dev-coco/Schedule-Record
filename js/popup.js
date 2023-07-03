@@ -1,5 +1,6 @@
 const itemSwitch = document.getElementById('itemSwitch')
 const container = document.querySelectorAll('.container')
+const header = document.getElementsByClassName('header')[1]
 
 // 日程记录
 const info = document.getElementsByClassName('info')
@@ -53,7 +54,9 @@ const startEvent = () => {
   } else if (start.innerText === '结束') {
     task.value = ''
     start.innerText = '开始'
-    fillForm(time, document.getElementById('endTime').value, info[1].innerText.split('事件：').pop())
+    const data = info[1].innerText.split(/时间：|事件：|\n/g)
+    const startTime = data[1].replace(/[^0-9:]/g, '')
+    fillForm(startTime, document.getElementById('endTime').value, info[1].innerText.split('事件：').pop())
     chrome.storage.local.set({ isRunning: false, getTask: '' })
     chrome.runtime.sendMessage('endRecord');
   }
@@ -132,7 +135,8 @@ items.addEventListener('click', () => {
 })
 
 // 恢复界面数据
-chrome.storage.local.get(['getTask', 'isRunning', 'todo', 'scheduleItems', 'itemStatus'], ({ getTask, isRunning, todo, scheduleItems, itemStatus }) => {
+chrome.storage.local.get(['getTask', 'isRunning', 'todo', 'scheduleItems', 'itemStatus', 'getSheetUrl'], ({ getTask, isRunning, todo, scheduleItems, itemStatus, getSheetUrl }) => {
+  header.innerHTML = `<a href="${getSheetUrl}" target="_blank">日程记录</a>`
   if (getTask) task.value = getTask || ''
   if (todo) info[1].innerHTML = todo || ''
   if (scheduleItems) {
